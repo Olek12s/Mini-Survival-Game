@@ -47,7 +47,7 @@ replay_pid*.log
 .LSOverride
 ._*
 
-# windows
+# Windows
 Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
