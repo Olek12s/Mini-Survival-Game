@@ -1,4 +1,4 @@
-package io.github.Mini_Survival_Game;
+package Mini_Survival_Game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Texture;

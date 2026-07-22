@@ -1,8 +1,8 @@
-package io.github.Mini_Survival_Game.lwjgl3;
+package Mini_Survival_Game.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import io.github.Mini_Survival_Game.Main;
+import Mini_Survival_Game.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
