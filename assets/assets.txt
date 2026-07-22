@@ -1,1 +1,3 @@
+fonts/Monocraft.otf
+fonts/Monocraft.ttf
 libgdx.png

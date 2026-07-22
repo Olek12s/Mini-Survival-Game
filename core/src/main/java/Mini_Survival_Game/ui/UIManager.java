@@ -1,5 +1,6 @@
 package Mini_Survival_Game.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,7 +23,11 @@ public class UIManager extends InputAdapter {
     }
 
     public void tick() {
+        Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        uiCamera.unproject(mouse);
+
         for (UIElement element : rootElements) {
+            element.updateHover(mouse.x, mouse.y);
             element.tick();
         }
     }

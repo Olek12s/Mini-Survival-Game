@@ -15,7 +15,8 @@ public abstract class UIElement {
     private float x, y;
     private float width, height;
 
-    private boolean isVisible, isEnabled = true;
+    private boolean isVisible = true;
+    private boolean isEnabled = true;
 
     private UIElement parent = null;
     private List<UIElement> elementList = new ArrayList<>();
@@ -96,8 +97,17 @@ public abstract class UIElement {
         return false;
     }
 
+    protected boolean onClick(int button) {return false;}
 
-    protected boolean onClick(int button) {
-        return false;
+    public void updateHover(float mouseX, float mouseY) {
+        if (!isVisible || !isEnabled)
+            return;
+
+        for (UIElement child : elementList) {
+            child.updateHover(mouseX, mouseY);
+        }
+        onHover(contains(mouseX, mouseY));
     }
+
+    protected void onHover(boolean hovering) {}
 }
