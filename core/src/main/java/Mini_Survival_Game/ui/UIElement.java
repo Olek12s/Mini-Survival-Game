@@ -93,7 +93,6 @@ public abstract class UIElement {
         if (contains(screenX, screenY)) {
             return onClick(button);
         }
-
         return false;
     }
 
