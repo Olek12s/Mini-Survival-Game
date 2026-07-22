@@ -12,14 +12,20 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class UIElement {
-    private float x, y;
-    private float width, height;
+    protected float x, y;
+    protected float width, height;
+
+    // Outer margins (outer margins relative to this element's parent)
+    protected float marginLeft, marginRight, marginTop, marginBottom;
+
+    // Inner margins (inner margins relative to this element's children)
+    protected float paddingLeft, paddingRight, paddingTop, paddingBottom;
 
     private boolean isVisible = true;
     private boolean isEnabled = true;
 
     private UIElement parent = null;
-    private List<UIElement> elementList = new ArrayList<>();
+    protected List<UIElement> elementList = new ArrayList<>();
 
     public UIElement(float x, float y, float width, float height) {
         this.x = x;
@@ -36,11 +42,27 @@ public abstract class UIElement {
     }
 
     public float getAbsoluteX() {
-        return (parent == null) ? x : x + parent.getAbsoluteX();
+        if (parent == null) {
+            return x + marginLeft;
+        }
+        return parent.getAbsoluteX() + parent.paddingLeft + x + marginLeft;
     }
 
     public float getAbsoluteY() {
-        return (parent == null) ? y : y + parent.getAbsoluteY();
+        if (parent == null) {
+            return y + marginBottom;
+        }
+        return parent.getAbsoluteY() + parent.paddingBottom + y + marginBottom;
+    }
+
+    // returns width avaiable for this element's children
+    public float getInnerWidth() {
+        return width - paddingLeft - paddingRight;
+    }
+
+    // returns height avaiable for this element's children
+    public float getInnerHeight() {
+        return height - paddingTop - paddingBottom;
     }
 
     public boolean contains(float cx, float cy) {

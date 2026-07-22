@@ -30,7 +30,11 @@ public class UIButton extends UIElement {
 
     @Override
     protected void renderElement(SpriteBatch batch) {
-        font.draw(batch, text, getAbsoluteX(), getAbsoluteY() + getHeight() / 2);
+        float ax = getAbsoluteX();
+        float ay = getAbsoluteY();
+
+        //batch.draw(buttonTexture, ax, ay, width, height);
+        font.draw(batch, text, ax + paddingLeft, ay + height - paddingTop);
     }
 
     @Override
