@@ -6,6 +6,7 @@ import Mini_Survival_Game.ui.UIManager;
 import Mini_Survival_Game.ui.UITable;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -40,10 +41,14 @@ public class Main extends ApplicationAdapter {
         Gdx.input.setInputProcessor(uiManager);
 
         table = new UITable(100, 50, 400, 350, 5, 2);
-        UIButton buttonA = new UIButton(100, 50, "SSSSSSSS");
+        UIButton buttonA = new UIButton(120, 50, "Start!");
         buttonA.setClickListener(() -> System.out.println("Start clicked!"));
         buttonA.setAlignment(RelativePositions.BOT_RIGHT);
         buttonA.setTextAlignment(RelativePositions.TOP_RIGHT);
+        buttonA.setPaddingTop(5.f);
+        buttonA.setPaddingRight(15.f);
+        buttonA.setText("[RED]S[GREEN]t[BLUE]a[YELLOW]r[CYAN]t");
+
 
 
         UIButton buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
@@ -65,7 +70,7 @@ public class Main extends ApplicationAdapter {
         uiManager.tick();
 
         batch.begin();
-        batch.draw(image, 140, 210);
+        //batch.draw(image, 140, 210);
         table.render(batch);
         batch.end();
 

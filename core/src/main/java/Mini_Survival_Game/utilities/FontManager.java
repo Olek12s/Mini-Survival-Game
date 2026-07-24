@@ -13,6 +13,10 @@ public class FontManager {
     public static BitmapFont DEFAULT;
     public static BitmapFont TITLE;
 
+
+    // Enablink markups for fonts enable making colorful text via markups such as:
+    // .setText("[RED]S[GREEN]t[BLUE]a[YELLOW]r[CYAN]t");
+    // Text above will appear with 5 different colors given to all the selected letters
     static {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Monocraft.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -22,10 +26,11 @@ public class FontManager {
         // basic default font
         parameter.size = 24;
         DEFAULT = generator.generateFont(parameter);
-
+        DEFAULT.getData().markupEnabled = true;
         // bigger default font
         parameter.size = 48;
         TITLE = generator.generateFont(parameter);
+        TITLE.getData().markupEnabled = true;
 
         generator.dispose();
     }

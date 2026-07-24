@@ -18,7 +18,7 @@ public class UIButton extends UIElement {
     private boolean hovered;
 
     private RelativePositions textAlignment = RelativePositions.MID;
-
+    private Color textColor = Color.WHITE;
     private Color buttonColor = new Color(0.2f, 0.4f, 0.6f, 1f);
     private Color buttonHoverColor = new Color(0.8f, 0.4f, 0.6f, 0.3f);
 
@@ -49,6 +49,8 @@ public class UIButton extends UIElement {
         batch.setColor(hovered ? buttonHoverColor : buttonColor);
         batch.draw(Renderer.getPixel(), ax, ay, width, height);
         batch.setColor(Color.WHITE);
+
+        font.setColor(textColor);
 
         FontManager.LAYOUT.setText(font, text);
         float textWidth = FontManager.LAYOUT.width;
