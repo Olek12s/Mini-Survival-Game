@@ -81,8 +81,8 @@ public class UITable extends UIElement {
                     float eH = el.getHeight();
 
                     // If element has width/height equal 0, fill whole avaiable space
-                    if (eW <= 0) eW = availableW;
-                    if (eH <= 0) eH = availableH;
+                    //if (eW <= 0) eW = availableW;
+                    //if (eH <= 0) eH = availableH;
 
                     // Clamp to avaiable to not go out of cell
                     eW = Math.min(eW, availableW);

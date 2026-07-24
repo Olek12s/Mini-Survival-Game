@@ -17,6 +17,8 @@ public class UIButton extends UIElement {
     private OnHoverListener hoverListener;
     private boolean hovered;
 
+    private RelativePositions textAlignment = RelativePositions.MID;
+
     private Color buttonColor = new Color(0.2f, 0.4f, 0.6f, 1f);
     private Color buttonHoverColor = new Color(0.8f, 0.4f, 0.6f, 0.3f);
 
@@ -32,8 +34,8 @@ public class UIButton extends UIElement {
         this.font = FontManager.DEFAULT;
     }
 
-    public UIButton(String text) {
-        super(0, 0, 0, 0);
+    public UIButton(float width, float height, String text) {
+        super(0, 0, width, height);
         this.text = text;
         this.font = FontManager.DEFAULT;
     }
@@ -56,8 +58,45 @@ public class UIButton extends UIElement {
         float innerW = getInnerWidth();
         float innerH = getInnerHeight();
 
-        float textX = ax + paddingLeft + (innerW - textWidth) / 2f;
-        float textY = ay + paddingBottom + (innerH + textHeight) / 2f;
+//        float textX = ax + paddingLeft + (innerW - textWidth) / 2f;
+//        float textY = ay + paddingBottom + (innerH + textHeight) / 2f;
+        float textX = ax + paddingLeft;
+        float textY = ay + paddingBottom;
+
+
+        // Horizontal alignment
+        switch (textAlignment) {
+            case TOP:
+            case MID:
+            case BOT:
+                textX += (innerW - textWidth) / 2f;
+                break;
+            case TOP_RIGHT:
+            case MID_RIGHT:
+            case BOT_RIGHT:
+                textX += (innerW - textWidth);
+                break;
+            default: // LEFT (TOP_LEFT, MID_LEFT, BOT_LEFT)
+                break;
+        }
+
+        // Vertical Alignment
+        switch (textAlignment) {
+            case MID_LEFT:
+            case MID:
+            case MID_RIGHT:
+                textY += (innerH + textHeight) / 2f;
+                break;
+            case TOP_LEFT:
+            case TOP:
+            case TOP_RIGHT:
+                textY += innerH;
+                break;
+            default: // BOT (BOT_LEFT, BOT, BOT_RIGHT)
+                textY += textHeight;
+                break;
+        }
+
 
         font.draw(batch, text, textX, textY);
     }

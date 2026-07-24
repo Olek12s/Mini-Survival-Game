@@ -1,5 +1,6 @@
 package Mini_Survival_Game;
 
+import Mini_Survival_Game.ui.RelativePositions;
 import Mini_Survival_Game.ui.UIButton;
 import Mini_Survival_Game.ui.UIManager;
 import Mini_Survival_Game.ui.UITable;
@@ -38,12 +39,17 @@ public class Main extends ApplicationAdapter {
         uiManager = new UIManager(camera);
         Gdx.input.setInputProcessor(uiManager);
 
-        table = new UITable(100, 100, 200, 200, 5, 2);
-        UIButton buttonA = new UIButton("Start");
-        UIButton buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
+        table = new UITable(100, 50, 400, 350, 5, 2);
+        UIButton buttonA = new UIButton(100, 50, "SSSSSSSS");
+        buttonA.setClickListener(() -> System.out.println("Start clicked!"));
+        buttonA.setAlignment(RelativePositions.BOT_RIGHT);
+        buttonA.setTextAlignment(RelativePositions.TOP_RIGHT);
 
+
+        UIButton buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
         table.addElementAt(buttonA, 0, 0);
         table.addElementAt(buttonB, 2, 1);
+
 
         uiManager.addRootElement(table);
     }
