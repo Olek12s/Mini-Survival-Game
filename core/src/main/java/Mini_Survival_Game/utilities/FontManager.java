@@ -2,15 +2,18 @@ package Mini_Survival_Game.utilities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class FontManager {
+    public static final GlyphLayout LAYOUT = new GlyphLayout(); // object needed to measure width and height of the text (glyphs)
+
 
     public static BitmapFont DEFAULT;
     public static BitmapFont TITLE;
 
-    public static void load() {
+    static {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Monocraft.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 

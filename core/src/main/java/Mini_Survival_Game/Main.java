@@ -1,7 +1,11 @@
 package Mini_Survival_Game;
 
+import Mini_Survival_Game.ui.UIButton;
+import Mini_Survival_Game.ui.UIManager;
 import Mini_Survival_Game.ui.UITable;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,7 +17,15 @@ public class Main extends ApplicationAdapter {
     private ShapeRenderer shapeRenderer;
     private Texture image;
 
-    UITable table = new UITable(100, 100, 100, 100, 2, 5);
+    private OrthographicCamera camera;
+    private UIManager uiManager;
+
+    UITable table;
+    UIButton buttonA;
+    UIButton buttonB;
+
+
+
 
     @Override
     public void create() {
@@ -21,14 +33,34 @@ public class Main extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         image = new Texture("libgdx.png");
 
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        uiManager = new UIManager(camera);
+        Gdx.input.setInputProcessor(uiManager);
 
+        table = new UITable(100, 100, 200, 200, 5, 2);
+        UIButton buttonA = new UIButton("Start");
+        UIButton buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
+
+        table.addElementAt(buttonA, 0, 0);
+        table.addElementAt(buttonB, 2, 1);
+
+        uiManager.addRootElement(table);
     }
 
     @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        uiManager.tick();
+
         batch.begin();
         batch.draw(image, 140, 210);
+        table.render(batch);
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

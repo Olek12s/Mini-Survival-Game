@@ -24,6 +24,8 @@ public abstract class UIElement {
     private boolean isVisible = true;
     private boolean isEnabled = true;
 
+    private RelativePositions alignment = RelativePositions.MID;
+
     private UIElement parent = null;
     protected List<UIElement> elementList = new ArrayList<>();
 
@@ -34,6 +36,16 @@ public abstract class UIElement {
         this.height = height;
     }
 
+    public void setMargin(float margin) {
+        this.marginLeft = margin; this.marginRight = margin;
+        this.marginTop = margin; this.marginBottom = margin;
+    }
+
+    public void setPadding(float padding) {
+        this.paddingLeft = padding; this.paddingRight = padding;
+        this.paddingTop = padding; this.paddingBottom = padding;
+    }
+
     public void addElement(UIElement element) {
         if (element != null) {
             element.setParent(this);
@@ -42,17 +54,13 @@ public abstract class UIElement {
     }
 
     public float getAbsoluteX() {
-        if (parent == null) {
-            return x + marginLeft;
-        }
-        return parent.getAbsoluteX() + parent.paddingLeft + x + marginLeft;
+        if (parent == null) return x;
+        return parent.getAbsoluteX() + x;
     }
 
     public float getAbsoluteY() {
-        if (parent == null) {
-            return y + marginBottom;
-        }
-        return parent.getAbsoluteY() + parent.paddingBottom + y + marginBottom;
+        if (parent == null) return y;
+        return parent.getAbsoluteY() + y;
     }
 
     // returns width avaiable for this element's children
