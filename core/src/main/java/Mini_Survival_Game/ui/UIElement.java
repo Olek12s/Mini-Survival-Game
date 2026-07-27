@@ -1,8 +1,11 @@
 package Mini_Survival_Game.ui;
 
+import Mini_Survival_Game.utilities.Renderer;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +28,15 @@ public abstract class UIElement {
     private boolean isEnabled = true;
 
     private RelativePositions alignment = RelativePositions.MID;
+
+    protected Color backgroundColor = null;
+    protected Texture backgroundTexture = null;
+    protected NinePatch backgroundPatch = null;
+
+    protected Color borderColor = null;
+    protected Texture borderTexture = null;
+    protected NinePatch borderPatch = null;
+    protected float borderThickness = 0f;
 
     private UIElement parent = null;
     protected List<UIElement> elementList = new ArrayList<>();
@@ -85,11 +97,58 @@ public abstract class UIElement {
 
     public void render(SpriteBatch batch) {
         if (!isVisible) return;
+
+        renderBackground(batch);
         renderElement(batch);
+        renderBorder(batch);
 
         for (UIElement child : elementList) {
             child.render(batch);
         }
+    }
+
+    protected void renderBackground(SpriteBatch batch) {
+        float ax = getAbsoluteX();
+        float ay = getAbsoluteY();
+
+        // Draw background with color
+        if (backgroundColor != null) {
+            batch.setColor(backgroundColor);
+            batch.draw(Renderer.getPixel(), ax, ay, width, height);
+        }
+
+        if (backgroundPatch != null) {         // Draw background with 9Patch texture
+            batch.setColor(Color.WHITE);
+            backgroundPatch.draw(batch, ax, ay, width, height);
+        }
+        else if (backgroundTexture != null) {  // Draw background with full texture
+            batch.setColor(Color.WHITE);
+            batch.draw(backgroundTexture, ax, ay, width, height);
+        }
+        batch.setColor(Color.WHITE);
+    }
+
+    protected void renderBorder(SpriteBatch batch) {
+        if (borderThickness <= 0) return;
+        if (borderColor == null && borderTexture == null && borderPatch == null) return;
+
+        float ax = getAbsoluteX();
+        float ay = getAbsoluteY();
+        float t = borderThickness;
+
+        batch.setColor(borderColor != null ? borderColor : Color.WHITE);
+
+        if (borderPatch != null) {    // Drawin 9=patch for frame
+            borderPatch.draw(batch, ax, ay, width, height);
+        }
+        else {  // else drawing border with one color
+            Texture tex = borderTexture != null ? borderTexture : Renderer.getPixel();
+            batch.draw(tex, ax, ay, width, t); // Bottom
+            batch.draw(tex, ax, ay + height - t, width, t); // Top
+            batch.draw(tex, ax, ay + t, t, height - 2 * t); // Left
+            batch.draw(tex, ax + width - t, ay + t, t, height - 2 * t); // Right
+        }
+        batch.setColor(Color.WHITE);
     }
 
     protected abstract void renderElement(SpriteBatch batch);
