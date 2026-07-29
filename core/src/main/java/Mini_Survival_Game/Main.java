@@ -1,9 +1,6 @@
 package Mini_Survival_Game;
 
-import Mini_Survival_Game.ui.RelativePositions;
-import Mini_Survival_Game.ui.UIButton;
-import Mini_Survival_Game.ui.UIManager;
-import Mini_Survival_Game.ui.UITable;
+import Mini_Survival_Game.ui.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -25,9 +22,9 @@ public class Main extends ApplicationAdapter {
     UITable table;
     UIButton buttonA;
     UIButton buttonB;
+    UILabel labelA;
 
-
-
+    UIPanel rootPanel;
 
     @Override
     public void create() {
@@ -40,8 +37,10 @@ public class Main extends ApplicationAdapter {
         uiManager = new UIManager(camera);
         Gdx.input.setInputProcessor(uiManager);
 
+        rootPanel = new UIPanel(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         table = new UITable(100, 50, 400, 350, 5, 2);
-        UIButton buttonA = new UIButton(120, 50, "Start!");
+        buttonA = new UIButton(120, 50, "Start!");
         buttonA.setClickListener(() -> System.out.println("Start clicked!"));
         buttonA.setAlignment(RelativePositions.BOT_RIGHT);
         buttonA.setTextAlignment(RelativePositions.TOP_RIGHT);
@@ -50,13 +49,22 @@ public class Main extends ApplicationAdapter {
         buttonA.setText("[RED]S[GREEN]t[BLUE]a[YELLOW]r[CYAN]t");
 
 
+        labelA = new UILabel(100, 80, "Label");
+        System.out.println(labelA.getWidth() + ", " + labelA.getHeight() + "', " + labelA.getX() + ", " + labelA.getY());
+        labelA.setBackgroundColor(Color.GRAY);
+        labelA.setTextAlignment(RelativePositions.BOT_RIGHT);
+        labelA.setAlignment(RelativePositions.TOP_RIGHT);
+        labelA.pack();
 
-        UIButton buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
+
+        buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
         table.addElementAt(buttonA, 0, 0);
         table.addElementAt(buttonB, 2, 1);
 
+        rootPanel.addElement(table);
+        rootPanel.addElement(labelA);
 
-        uiManager.addRootElement(table);
+        uiManager.addRootElement(rootPanel);
     }
 
     @Override
@@ -71,11 +79,19 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         //batch.draw(image, 140, 210);
-        table.render(batch);
+       // table.render(batch);
+       // labelA.render(batch);
+      //  rootTable.render(batch);
+
+        uiManager.render(batch);
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        table.renderDebug(shapeRenderer);
+       // table.renderDebug(shapeRenderer);
+       // labelA.renderDebug(shapeRenderer);
+        // rootTable.renderDebug(shapeRenderer);
+
+        uiManager.renderDebug(shapeRenderer);
         shapeRenderer.end();
     }
 

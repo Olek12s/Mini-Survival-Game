@@ -24,9 +24,29 @@ public class UILabel extends UIElement {
     }
 
     public UILabel(float width, float height, String text) {
-        super(0, 0, width, height);
+        this(0, 0, width, height, text);
+    }
+
+    public UILabel(String text) {
+        this(0, 0, 0, 0, text);
+        this.wrapText = false;
+        pack();
+    }
+
+    public void setText(String text) {
         this.text = text;
-        this.font = FontManager.DEFAULT;
+        if (!wrapText) {
+            pack();
+        }
+    }
+
+    // Adjust Label's size to the text
+    public void pack() {
+        if (text != null && font != null) {
+            FontManager.LAYOUT.setText(font, text);
+            this.width = FontManager.LAYOUT.width;
+            this.height = FontManager.LAYOUT.height;
+        }
     }
 
     @Override
