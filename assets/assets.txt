@@ -1,4 +1,7 @@
-default_window.9.png
+default_window_background_dark.9.png
+default_window_background_light.9.png
+default_window_border.9.png
+default_window_dark.9.png
 default_window_light.9.png
 fonts/Monocraft.otf
 fonts/Monocraft.ttf

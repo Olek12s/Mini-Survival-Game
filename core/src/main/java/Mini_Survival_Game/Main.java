@@ -18,6 +18,9 @@ public class Main extends ApplicationAdapter {
 
     Texture panelTex;
     Texture slotTex;
+    Texture defaultLight;
+    Texture defaultDark;
+
 
     private OrthographicCamera camera;
     private UIManager uiManager;
@@ -31,8 +34,10 @@ public class Main extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        panelTex = new Texture("default_window.9.png");
-        slotTex = new Texture("default_window_light.9.png");
+        panelTex = new Texture("default_window_background_light.9.png");
+        slotTex = new Texture("default_window_border.9.png");
+        defaultDark = new Texture("default_window_dark.9.png");
+        defaultLight = new Texture("default_window_light.9.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -67,19 +72,14 @@ public class Main extends ApplicationAdapter {
 
         uiManager.addRootElement(rootPanel);
 
-        NinePatch panelPatch = new NinePatch(panelTex, 10, 10, 10, 10);
-        NinePatch cellPatch = new NinePatch(slotTex, 6, 6, 6, 6);
+        NinePatch panelPatch = new NinePatch(panelTex);
+        NinePatch cellPatch = new NinePatch(slotTex);
+        NinePatch defaultPatchDark = new NinePatch(defaultDark);
+        NinePatch defaultPatchLight = new NinePatch(defaultLight);
 
-        //rootPanel.setBackgroundPatch(panelPatch);
-
-        table.setBackgroundPatch(panelPatch);
-        table.setBorderPatch(cellPatch);
-        table.setBorderThickness(1f);
-       // table.setAllCellsBackground(cellPatch);
-
-
-        //table.setCellBackground(0, 0, cellPatch);
-        //table.setCellBackground(2, 1, cellPatch);
+       // table.setAllCellsBackground(defaultPatchLight);
+        table.setBorderTexture(panelTex);
+        table.setBorderThickness(28);
     }
 
     @Override
