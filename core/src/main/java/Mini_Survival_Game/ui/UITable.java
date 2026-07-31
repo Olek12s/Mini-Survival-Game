@@ -130,6 +130,27 @@ public class UITable extends UIElement {
         }
     }
 
+    public void setCellBackground(int row, int col, NinePatch bgPatch) {
+        if (row >= 0 && row < rows && col >= 0 && col < cols) {
+            cellStyles[row][col].bgPatch = bgPatch;
+        }
+    }
+
+    public void setCellBorder(int row, int col, NinePatch borderPatch, float borderThickness) {
+        if (row >= 0 && row < rows && col >= 0 && col < cols) {
+            cellStyles[row][col].borderPatch = borderPatch;
+            cellStyles[row][col].borderThickness = borderThickness;
+        }
+    }
+
+    public void setAllCellsBackground(NinePatch bgPatch) {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                cellStyles[r][c].bgPatch = bgPatch;
+            }
+        }
+    }
+
     @Override
     public void setWidth(float width) {
         super.setWidth(width);

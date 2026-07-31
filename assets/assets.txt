@@ -1,3 +1,5 @@
+default_window.9.png
+default_window_light.9.png
 fonts/Monocraft.otf
 fonts/Monocraft.ttf
 libgdx.png

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -14,7 +15,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
-    private Texture image;
+
+    Texture panelTex;
+    Texture slotTex;
 
     private OrthographicCamera camera;
     private UIManager uiManager;
@@ -24,22 +27,23 @@ public class Main extends ApplicationAdapter {
     UIButton buttonB;
     UILabel labelA;
 
-    UIPanel rootPanel;
-
     @Override
     public void create() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        image = new Texture("libgdx.png");
+        panelTex = new Texture("default_window.9.png");
+        slotTex = new Texture("default_window_light.9.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         uiManager = new UIManager(camera);
         Gdx.input.setInputProcessor(uiManager);
 
-        rootPanel = new UIPanel(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        UIPanel rootPanel = new UIPanel(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        table = new UITable(100, 50, 400, 350, 5, 2);
+        table = new UITable(0, 0, 400, 350, 5, 2);
+        table.setAlignment(RelativePositions.MID);
+
         buttonA = new UIButton(120, 50, "Start!");
         buttonA.setClickListener(() -> System.out.println("Start clicked!"));
         buttonA.setAlignment(RelativePositions.BOT_RIGHT);
@@ -48,23 +52,34 @@ public class Main extends ApplicationAdapter {
         buttonA.setPaddingRight(15.f);
         buttonA.setText("[RED]S[GREEN]t[BLUE]a[YELLOW]r[CYAN]t");
 
-
-        labelA = new UILabel(100, 80, "Label");
-        System.out.println(labelA.getWidth() + ", " + labelA.getHeight() + "', " + labelA.getX() + ", " + labelA.getY());
-        labelA.setBackgroundColor(Color.GRAY);
-        labelA.setTextAlignment(RelativePositions.BOT_RIGHT);
-        labelA.setAlignment(RelativePositions.TOP_RIGHT);
-        labelA.pack();
-
-
         buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
+
         table.addElementAt(buttonA, 0, 0);
         table.addElementAt(buttonB, 2, 1);
 
-        rootPanel.addElement(table);
+        labelA = new UILabel("Label");
+        labelA.setBackgroundColor(Color.GRAY);
+        labelA.setTextAlignment(RelativePositions.BOT_RIGHT);
+        labelA.setAlignment(RelativePositions.TOP_RIGHT);
+
         rootPanel.addElement(labelA);
+        rootPanel.addElement(table);
 
         uiManager.addRootElement(rootPanel);
+
+        NinePatch panelPatch = new NinePatch(panelTex, 10, 10, 10, 10);
+        NinePatch cellPatch = new NinePatch(slotTex, 6, 6, 6, 6);
+
+        //rootPanel.setBackgroundPatch(panelPatch);
+
+        table.setBackgroundPatch(panelPatch);
+        table.setBorderPatch(cellPatch);
+        table.setBorderThickness(1f);
+       // table.setAllCellsBackground(cellPatch);
+
+
+        //table.setCellBackground(0, 0, cellPatch);
+        //table.setCellBackground(2, 1, cellPatch);
     }
 
     @Override
@@ -78,26 +93,20 @@ public class Main extends ApplicationAdapter {
         uiManager.tick();
 
         batch.begin();
-        //batch.draw(image, 140, 210);
-       // table.render(batch);
-       // labelA.render(batch);
-      //  rootTable.render(batch);
-
         uiManager.render(batch);
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-       // table.renderDebug(shapeRenderer);
-       // labelA.renderDebug(shapeRenderer);
-        // rootTable.renderDebug(shapeRenderer);
-
-        uiManager.renderDebug(shapeRenderer);
+        //uiManager.renderDebug(shapeRenderer);
         shapeRenderer.end();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        image.dispose();
+        shapeRenderer.dispose();
+
+        if(panelTex != null) panelTex.dispose();
+        if(slotTex != null) slotTex.dispose();
     }
 }
