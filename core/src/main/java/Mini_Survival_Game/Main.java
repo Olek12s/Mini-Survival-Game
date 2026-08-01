@@ -34,10 +34,6 @@ public class Main extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        panelTex = new Texture("default_window_background_light.9.png");
-        slotTex = new Texture("default_window_border.9.png");
-        defaultDark = new Texture("default_window_dark.9.png");
-        defaultLight = new Texture("default_window_light.9.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -46,40 +42,45 @@ public class Main extends ApplicationAdapter {
 
         UIPanel rootPanel = new UIPanel(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        table = new UITable(0, 0, 400, 350, 5, 2);
-        table.setAlignment(RelativePositions.MID);
 
-        buttonA = new UIButton(120, 50, "Start!");
-        buttonA.setClickListener(() -> System.out.println("Start clicked!"));
-        buttonA.setAlignment(RelativePositions.BOT_RIGHT);
-        buttonA.setTextAlignment(RelativePositions.TOP_RIGHT);
-        buttonA.setPaddingTop(5.f);
-        buttonA.setPaddingRight(15.f);
-        buttonA.setText("[RED]S[GREEN]t[BLUE]a[YELLOW]r[CYAN]t");
+        UIScrollPane scrollA = new UIScrollPane(50, 50, 300, 300);
+        scrollA.setBackgroundColor(new Color(0.1f, 0.1f, 0.1f, 1f));
+        scrollA.setBorderColor(new Color(0.3f, 0.3f, 0.3f, 1f));
+        scrollA.setBorderThickness(2f);
+        scrollA.setTrackColor(new Color(0.2f, 0.2f, 0.2f, 1f));
+        scrollA.setKnobColor(new Color(0.5f, 0.5f, 0.5f, 1f));
+        scrollA.setVScrollEnabled(true);
+        scrollA.setHScrollEnabled(false);
+        scrollA.setVScrollPos(UIScrollPane.ScrollBarPosition.RIGHT);
 
-        buttonB = new UIButton(250, 50, 50, 50, "Zażółć Gęślą jaźń");
+        UITable innerTable1 = new UITable(0, 0, 280, 800, 10, 1);
+        for(int i = 0; i < 10; i++) {
+            UIButton b = new UIButton(100, 40, "Cell " + i);
+            innerTable1.addElementAt(b, 9-i, 0);
+        }
+        scrollA.setContent(innerTable1);
 
-        table.addElementAt(buttonA, 0, 0);
-        table.addElementAt(buttonB, 2, 1);
 
-        labelA = new UILabel("Label");
-        labelA.setBackgroundColor(Color.GRAY);
-        labelA.setTextAlignment(RelativePositions.BOT_RIGHT);
-        labelA.setAlignment(RelativePositions.TOP_RIGHT);
+        UIScrollPane scrollB = new UIScrollPane(400, 50, 300, 300);
+        scrollB.setBackgroundColor(new Color(0.15f, 0.15f, 0.2f, 1f));
+        scrollB.setBorderColor(Color.GRAY);
+        scrollB.setBorderThickness(2f);
+        scrollB.setVScrollEnabled(true);
+        scrollB.setHScrollEnabled(true);
+        scrollB.setVScrollPos(UIScrollPane.ScrollBarPosition.LEFT);
+        scrollB.setHScrollPos(UIScrollPane.ScrollBarPosition.BOTTOM);
 
-        rootPanel.addElement(labelA);
-        rootPanel.addElement(table);
+        UITable innerTable2 = new UITable(0, 0, 600, 600, 3, 3);
+        innerTable2.addElementAt(new UIButton(150, 50, "Left Top"), 2, 0);
+        innerTable2.addElementAt(new UIButton(150, 50, "Right Bot"), 0, 2);
+        scrollB.setContent(innerTable2);
 
-        uiManager.addRootElement(rootPanel);
+        uiManager.addRootElement(scrollA);
+        uiManager.addRootElement(scrollB);
 
-        NinePatch panelPatch = new NinePatch(panelTex);
-        NinePatch cellPatch = new NinePatch(slotTex);
-        NinePatch defaultPatchDark = new NinePatch(defaultDark);
-        NinePatch defaultPatchLight = new NinePatch(defaultLight);
-
-       // table.setAllCellsBackground(defaultPatchLight);
-        table.setBorderTexture(panelTex);
-        table.setBorderThickness(28);
+//        rootPanel.addElement(scrollA);
+//        rootPanel.addElement(scrollB);
+//        uiManager.addRootElement(rootPanel);
     }
 
     @Override

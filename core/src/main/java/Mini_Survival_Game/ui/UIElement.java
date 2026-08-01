@@ -24,8 +24,8 @@ public abstract class UIElement {
     // Inner margins (inner margins relative to this element's children)
     protected float paddingLeft, paddingRight, paddingTop, paddingBottom;
 
-    private boolean isVisible = true;
-    private boolean isEnabled = true;
+    protected boolean isVisible = true;
+    protected boolean isEnabled = true;
 
     private RelativePositions alignment = RelativePositions.MID;
 
@@ -199,4 +199,15 @@ public abstract class UIElement {
     }
 
     protected void onHover(boolean hovering) {}
+
+    public boolean scrolled(float mouseX, float mouseY, float amountX, float amountY) {
+        if (!isVisible || !isEnabled) return false;
+
+        for (int i = elementList.size() - 1; i >= 0; i--) {
+            if (elementList.get(i).scrolled(mouseX, mouseY, amountX, amountY)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

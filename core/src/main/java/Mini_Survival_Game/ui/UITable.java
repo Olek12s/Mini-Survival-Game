@@ -143,7 +143,7 @@ public class UITable extends UIElement {
         }
     }
 
-    public void setAllCellsBackground(NinePatch bgPatch) {
+    public void setAllCellsPatch(NinePatch bgPatch) {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 cellStyles[r][c].bgPatch = bgPatch;

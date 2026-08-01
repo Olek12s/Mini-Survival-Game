@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UIManager extends InputAdapter {
-    private OrthographicCamera uiCamera;
+    public static OrthographicCamera uiCamera;
     private List<UIElement> rootElements = new ArrayList<>();
 
     public UIManager(OrthographicCamera uiCamera) {
@@ -56,5 +56,18 @@ public class UIManager extends InputAdapter {
             }
         }
         return false;   // false if no UI element has consumed touch down
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        uiCamera.unproject(mouse);
+
+        for (int i = rootElements.size() - 1; i >= 0; i--) {
+            if (rootElements.get(i).scrolled(mouse.x, mouse.y, amountX, amountY)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
