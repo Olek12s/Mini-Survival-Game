@@ -53,10 +53,15 @@ public class Main extends ApplicationAdapter {
         scrollA.setHScrollEnabled(false);
         scrollA.setVScrollPos(UIScrollPane.ScrollBarPosition.RIGHT);
 
-        UITable innerTable1 = new UITable(0, 0, 280, 800, 10, 1);
-        for(int i = 0; i < 10; i++) {
-            UIButton b = new UIButton(100, 40, "Cell " + i);
-            innerTable1.addElementAt(b, 9-i, 0);
+        UITable innerTable1 = new UITable(0, 0, 280, 800, 10, 5);
+
+        int cellIndex = 0;
+        for(int row = 0; row < 10; row++) {
+            for (int col = 0; col < 5; col++) {
+                UIButton b = new UIButton(45, 40, "" + cellIndex);
+                innerTable1.addElementAt(b, 9 - row, col);
+                cellIndex++;
+            }
         }
         scrollA.setContent(innerTable1);
 
