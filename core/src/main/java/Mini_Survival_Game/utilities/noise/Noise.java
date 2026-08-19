@@ -42,6 +42,58 @@ public class Noise {
         this.seed = seed;
         this.width = width;
         this.height = height;
+
+        noise1 = new double[width * height];
+        noise2 = new double[width * height];
+        noise4 = new double[width * height];
+        noise8 = new double[width * height];
+        noise16 = new double[width * height];
+        noise32 = new double[width * height];
+        noise64 = new double[width * height];
+        noise128 = new double[width * height];
+        noise256 = new double[width * height];
+        noise512 = new double[width * height];
+        noise1024 = new double[width * height];
+        noise2048 = new double[width * height];
+        noise4096 = new double[width * height];
+
+        long s1 = seed;
+        long s2 = seed + 1000;
+        long s4 = seed + 2000;
+        long s8 = seed + 3000;
+        long s16 = seed + 4000;
+        long s32 = seed + 5000;
+        long s64 = seed + 6000;
+        long s128 = seed + 7000;
+        long s256 = seed + 8000;
+        long s512 = seed + 9000;
+        long s1024 = seed + 10000;
+        long s2048 = seed + 11000;
+        long s4096 = seed + 12000;
+
+        // Noise generation for width x height
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int index = x + y * width;
+
+                double rx = x + offsetX;
+                double ry = y + offsetY;
+
+                noise1[index] = Simplex.noise2(s1, rx / 1.0, ry / 1.0);
+                noise2[index] = Simplex.noise2(s2, rx / 2.0, ry / 2.0);
+                noise4[index] = Simplex.noise2(s4, rx / 4.0, ry / 4.0);
+                noise8[index] = Simplex.noise2(s8, rx / 8.0, ry / 8.0);
+                noise16[index] = Simplex.noise2(s16, rx / 16.0, ry / 16.0);
+                noise32[index] = Simplex.noise2(s32, rx / 32.0, ry / 32.0);
+                noise64[index] = Simplex.noise2(s64, rx / 64.0, ry / 64.0);
+                noise128[index] = Simplex.noise2(s128, rx / 128.0, ry / 128.0);
+                noise256[index] = Simplex.noise2(s256, rx / 256.0, ry / 256.0);
+                noise512[index] = Simplex.noise2(s512, rx / 512.0, ry / 512.0);
+                noise1024[index] = Simplex.noise2(s1024, rx / 1024.0, ry / 1024.0);
+                noise2048[index] = Simplex.noise2(s2048, rx / 2048.0, ry / 2048.0);
+                noise4096[index] = Simplex.noise2(s4096, rx / 4096.0, ry / 4096.0);
+            }
+        }
     }
 
     private double sample(double[] values, int x, int y) {
