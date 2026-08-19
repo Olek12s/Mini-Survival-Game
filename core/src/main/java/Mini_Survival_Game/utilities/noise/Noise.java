@@ -10,15 +10,32 @@ public class Noise {
     //
 
     private double[] noise1;
+    private double[] noise2;
     private double[] noise4;
     private double[] noise8;
     private double[] noise16;
     private double[] noise32;
     private double[] noise64;
     private double[] noise128;
+    private double[] noise256;
     private double[] noise512;
+    private double[] noise1024;
     private double[] noise2048;
-    private double[] noise8192;
+    private double[] noise4096;
+
+    private double[] getNoise1() { if (noise1 == null) { noise1 = new double[width * height];} return noise1;}
+    private double[] getNoise2() { if (noise2 == null) { noise2 = new double[width * height];} return noise2;}
+    private double[] getNoise4() { if (noise4 == null) { noise4 = new double[width * height]; } return noise4;}
+    private double[] getNoise8() { if (noise8 == null) { noise8 = new double[width * height]; } return noise8;}
+    private double[] getNoise16() { if (noise16 == null) { noise16 = new double[width * height]; } return noise16;}
+    private double[] getNoise32() { if (noise32 == null) { noise32 = new double[width * height]; } return noise32;}
+    private double[] getNoise64() { if (noise64 == null) { noise64 = new double[width * height]; } return noise64;}
+    private double[] getNoise128() { if (noise128 == null) { noise128 = new double[width * height]; } return noise128;}
+    private double[] getNoise256() { if (noise256 == null) { noise256 = new double[width * height]; } return noise256;}
+    private double[] getNoise512() { if (noise512 == null) { noise512 = new double[width * height]; } return noise512;}
+    private double[] getNoise1024() { if (noise1024 == null) { noise1024 = new double[width * height]; } return noise1024;}
+    private double[] getNoise2048() { if (noise2048 == null) { noise2048 = new double[width * height]; } return noise2048;}
+    private double[] getNoise4096() { if (noise4096 == null) { noise4096 = new double[width * height]; } return noise4096;}
 
 
     public Noise(long seed, int offsetX, int offsetY, int width, int height) {
@@ -27,7 +44,49 @@ public class Noise {
         this.height = height;
     }
 
+    private double sample(double[] values, int x, int y) {
+        return values[(x & (width - 1)) + (y & (height - 1)) * width];
+    }
 
+    public double getScale1Noise(int x, int y) { return sample(getNoise1(), x, y); }
+    public double getScale2Noise(int x, int y) { return sample(getNoise2(), x, y); }
+    public double getScale4Noise(int x, int y) { return sample(getNoise4(), x, y); }
+    public double getScale8Noise(int x, int y) { return sample(getNoise8(), x, y); }
+    public double getScale16Noise(int x, int y) { return sample(getNoise16(), x, y); }
+    public double getScale32Noise(int x, int y) { return sample(getNoise32(), x, y); }
+    public double getScale64Noise(int x, int y) { return sample(getNoise64(), x, y); }
+    public double getScale128Noise(int x, int y) { return sample(getNoise128(), x, y); }
+    public double getScale256Noise(int x, int y) { return sample(getNoise256(), x, y); }
+    public double getScale512Noise(int x, int y) { return sample(getNoise512(), x, y); }
+    public double getScale1024Noise(int x, int y) { return sample(getNoise1024(), x, y); }
+    public double getScale2048Noise(int x, int y) { return sample(getNoise2048(), x, y); }
+    public double getScale4096Noise(int x, int y) { return sample(getNoise4096(), x, y); }
 
+    private double octave(int x, int y, double s1, double s2, double s4, double s8, double s16, double s32, double s64, double s128, double s256, double s512, double s1024, double s2048, double s4096) {
+        return getScale1Noise(x, y) * s1
+                + getScale2Noise(x, y) * s2
+                + getScale4Noise(x, y) * s4
+                + getScale8Noise(x, y) * s8
+                + getScale16Noise(x, y) * s16
+                + getScale32Noise(x, y) * s32
+                + getScale64Noise(x, y) * s64
+                + getScale128Noise(x, y) * s128
+                + getScale256Noise(x, y) * s256
+                + getScale512Noise(x, y) * s512
+                + getScale1024Noise(x, y) * s1024
+                + getScale2048Noise(x, y) * s2048
+                + getScale4096Noise(x, y) * s4096;
+    }
 
+    public double getTemperature(int x, int y) {
+        return octave(x, y, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0, 0, 0);
+    }
+
+    public double getHeight(int x, int y) {
+        return octave(x, y, 0.005, 0.01, 0.02, 0.01, 0.02, 0.05, 0.1, 0.2, 0.7, 0.2, 0, 0, 0);
+    }
+
+    public double getHumidity(int x, int y) {
+        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.4, 0.3, 0.1, 0.05, 0.02, 0.01, 0, 0, 0);
+    }
 }
