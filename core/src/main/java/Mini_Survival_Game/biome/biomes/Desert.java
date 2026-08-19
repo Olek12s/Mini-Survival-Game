@@ -1,4 +1,6 @@
 package Mini_Survival_Game.biome.biomes;
 
-public class Desert {
+import Mini_Survival_Game.biome.Biome;
+
+public class Desert extends Biome {
 }

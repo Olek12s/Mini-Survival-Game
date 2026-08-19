@@ -1,4 +1,6 @@
 package Mini_Survival_Game.biome.biomes;
 
-public class Winter {
+import Mini_Survival_Game.biome.Biome;
+
+public class Winter extends Biome {
 }
