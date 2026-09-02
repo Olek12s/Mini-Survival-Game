@@ -1,13 +1,23 @@
 package Mini_Survival_Game.biome;
 
 import Mini_Survival_Game.biome.biomes.*;
-import com.badlogic.gdx.graphics.Color;
+import Mini_Survival_Game.utilities.noise.Noise;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Biomes {
 
     ////////////////////////////////////////////////////
     // List of all existing biomes
     ////////////////////////////////////////////////////
+    public static final List<Biome> biomeList = new ArrayList<>();
+
     public static final Biome beach = new Beach();
     public static final Biome desert = new Desert();
     public static final Biome forest = new Forest();
@@ -17,18 +27,288 @@ public class Biomes {
     ////////////////////////////////////////////////////
     // Assigned map colors for biomes
     ////////////////////////////////////////////////////
-    public static final Color BEACH_COLOR = new Color(Color.rgba8888(209, 209, 109, 1));
-    public static final Color DESERT_COLOR = new Color(Color.rgba8888(240, 240, 91, 1));
-    public static final Color FOREST_COLOR = new Color(Color.rgba8888(41, 115, 56, 1));
-    public static final Color OCEAN_COLOR = new Color(Color.rgba8888(0, 119, 190, 1));
-    public static final Color WINTER_COLOR = new Color(Color.rgba8888(210, 210, 210, 1));
 
 
-    /**
-     * Interactive overview of infinite biome map
-     *
-     */
+    public static void addBiome(Biome biome) {
+        biomeList.add(biome);
+    }
+
+
+    ////////////////////////////////////////////////////
+    // Interactive Biomes Preview
+    ////////////////////////////////////////////////////
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            BiomeViewer viewer = new BiomeViewer();
+            viewer.setVisible(true);
+        });
+    }
 
+    public static class BiomeViewer extends JFrame {
+        private double zoom = 1.0;
+        private double doubleOffsetX = 0;
+        private double doubleOffsetY = 0;
+
+        private int generatedOffsetX = 0;
+        private int generatedOffsetY = 0;
+
+        private long currentSeed = 0;
+
+        private int dragOffsetX = 0;
+        private int dragOffsetY = 0;
+        private int lastMouseX, lastMouseY;
+
+        private BufferedImage mapImage;
+        private final int mapWidth = 800;
+        private final int mapHeight = 600;
+
+        private final JPanel mapPanel;
+        private final JLabel coordsLabel;
+        private final JTextField seedField;
+        private final JCheckBox chunkGridCheck;
+
+        private boolean isGenerating = false;
+        private boolean generationPending = false;
+
+        public BiomeViewer() {
+            setTitle("Biome creator");
+            setSize(mapWidth + 16, mapHeight + 80);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLocationRelativeTo(null);
+            setLayout(new BorderLayout());
+
+            mapPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (mapImage != null) {
+                        int drawW = (int) (mapImage.getWidth() * zoom);
+                        int drawH = (int) (mapImage.getHeight() * zoom);
+
+                        int subPixelOffsetX = (int) Math.round((generatedOffsetX - doubleOffsetX) * zoom);
+                        int subPixelOffsetY = (int) Math.round((generatedOffsetY - doubleOffsetY) * zoom);
+
+                        g.drawImage(mapImage, dragOffsetX + subPixelOffsetX, dragOffsetY + subPixelOffsetY, drawW, drawH, null);
+                    }
+                    else {
+                        g.drawString("Generating map...", 50, 50);
+                    }
+
+                    if (chunkGridCheck != null && chunkGridCheck.isSelected()) {
+                        g.setColor(new java.awt.Color(0, 0, 0, 60));
+
+                        int startWorldX = (int) doubleOffsetX;
+                        int startWorldY = (int) doubleOffsetY;
+
+                        int endWorldX = startWorldX + (int)(getWidth() / zoom);
+                        int endWorldY = startWorldY + (int)(getHeight() / zoom);
+
+                        for (int x = startWorldX - 8; x <= endWorldX + 8; x++) {
+                            if (x % 8 == 0) {
+                                int screenX = (int) ((x - doubleOffsetX) * zoom) + dragOffsetX;
+                                g.drawLine(screenX, 0, screenX, getHeight());
+                            }
+                        }
+                        for (int y = startWorldY - 8; y <= endWorldY + 8; y++) {
+                            if (y % 8 == 0) {
+                                int screenY = (int) ((y - doubleOffsetY) * zoom) + dragOffsetY;
+                                g.drawLine(0, screenY, getWidth(), screenY);
+                            }
+                        }
+                    }
+                }
+            };
+            mapPanel.setBackground(java.awt.Color.DARK_GRAY);
+            add(mapPanel, BorderLayout.CENTER);
+
+            JPanel controlPanel = new JPanel();
+            controlPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+            controlPanel.add(new JLabel("Seed:"));
+            seedField = new JTextField(String.valueOf(currentSeed), 10);
+            controlPanel.add(seedField);
+
+            JButton applySeedBtn = new JButton("Apply");
+            applySeedBtn.addActionListener(e -> applySeed());
+            controlPanel.add(applySeedBtn);
+
+            JButton randomSeedBtn = new JButton("Random seed");
+            randomSeedBtn.addActionListener(e -> {
+                long newSeed = new Random().nextLong();
+                seedField.setText(String.valueOf(newSeed));
+                applySeed();
+            });
+            controlPanel.add(randomSeedBtn);
+
+            chunkGridCheck = new JCheckBox("Show chunks grid");
+            chunkGridCheck.addActionListener(e -> mapPanel.repaint());
+            controlPanel.add(chunkGridCheck);
+
+            coordsLabel = new JLabel("X: 0 Y: 0 | Zoom: 1.0x");
+            controlPanel.add(coordsLabel);
+
+            add(controlPanel, BorderLayout.NORTH);
+
+            mapPanel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    lastMouseX = e.getX();
+                    lastMouseY = e.getY();
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    doubleOffsetX -= dragOffsetX / zoom;
+                    doubleOffsetY -= dragOffsetY / zoom;
+
+                    dragOffsetX = 0;
+                    dragOffsetY = 0;
+                    generateMapAsync();
+                }
+            });
+
+            mapPanel.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    dragOffsetX = e.getX() - lastMouseX;
+                    dragOffsetY = e.getY() - lastMouseY;
+
+                    int worldX = (int) ((e.getX() - dragOffsetX) / zoom + doubleOffsetX);
+                    int worldY = (int) ((e.getY() - dragOffsetY) / zoom + doubleOffsetY);
+                    updateCoordsLabel(worldX, worldY);
+
+                    mapPanel.repaint();
+                }
+
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    int worldX = (int) (e.getX() / zoom + doubleOffsetX);
+                    int worldY = (int) (e.getY() / zoom + doubleOffsetY);
+                    updateCoordsLabel(worldX, worldY);
+                }
+            });
+
+            mapPanel.addMouseWheelListener(e -> {
+                double oldZoom = zoom;
+                if (e.getWheelRotation() < 0) {
+                    zoom *= 1.2;
+                } else {
+                    zoom /= 1.2;
+                }
+
+                zoom = Math.clamp(zoom, 0.3, 10.0);
+
+                double mouseWorldX = (e.getX() - dragOffsetX) / oldZoom + doubleOffsetX;
+                double mouseWorldY = (e.getY() - dragOffsetY) / oldZoom + doubleOffsetY;
+
+                doubleOffsetX = mouseWorldX - (e.getX() - dragOffsetX) / zoom;
+                doubleOffsetY = mouseWorldY - (e.getY() - dragOffsetY) / zoom;
+
+                int worldX = (int) (e.getX() / zoom + doubleOffsetX);
+                int worldY = (int) (e.getY() / zoom + doubleOffsetY);
+                updateCoordsLabel(worldX, worldY);
+
+                mapPanel.repaint();
+                generateMapAsync();
+            });
+
+            generateMapAsync();
+        }
+
+        private void updateCoordsLabel(int x, int y) {
+            String zoomText = String.format("%.1fx", zoom);
+            coordsLabel.setText("X: " + x + "  Y: " + y + " | Zoom: " + zoomText);
+        }
+
+        private void applySeed() {
+            try {
+                currentSeed = Long.parseLong(seedField.getText());
+                generateMapAsync();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Wrong seed format");
+            }
+        }
+
+        private void generateMapAsync() {
+            if (isGenerating) {
+                generationPending = true;
+                return;
+            }
+            isGenerating = true;
+            generationPending = false;
+
+            final int currentOffsetX = (int) Math.floor(doubleOffsetX);
+            final int currentOffsetY = (int) Math.floor(doubleOffsetY);
+            final double currentZoom = zoom;
+
+            new Thread(() -> {
+                int reqWidth = (int) Math.ceil(mapWidth / currentZoom) + 2;
+                int reqHeight = (int) Math.ceil(mapHeight / currentZoom) + 2;
+
+                if (reqWidth > 3500) reqWidth = 3500;
+                if (reqHeight > 3500) reqHeight = 3500;
+
+                Noise noise = new Noise(currentSeed, currentOffsetX, currentOffsetY, reqWidth, reqHeight);
+                BufferedImage newMapImage = new BufferedImage(reqWidth, reqHeight, BufferedImage.TYPE_INT_RGB);
+
+                for (int x = 0; x < reqWidth; x++) {
+                    for (int y = 0; y < reqHeight; y++) {
+                        Biome b = matchBiome(noise, x, y);
+                        newMapImage.setRGB(x, y, getBiomeRGB(b));
+                    }
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    mapImage = newMapImage;
+                    generatedOffsetX = currentOffsetX;
+                    generatedOffsetY = currentOffsetY;
+
+                    mapPanel.repaint();
+                    isGenerating = false;
+
+                    if (generationPending) {
+                        generateMapAsync();
+                    }
+                });
+            }).start();
+        }
+
+        /**
+         * Selects the best matching biome for given world coordinates
+         * based on temperature, height and humidity noise values.
+         * @param noise source of procedural world data
+         * @param x world x-coordinate
+         * @param y world y-coordinate
+         * @return best matching biome
+         */
+        public static Biome matchBiome(Noise noise, int x, int y) {
+            Biome closest = null;
+            //float maxWeight = -Float.MAX_VALUE;
+            float maxWeight = Float.NEGATIVE_INFINITY;
+            for (Biome biome : biomeList) {
+                float weight = biome.getGenerationWeight(noise, x, y);
+                if (weight > maxWeight) {
+                    maxWeight = weight;
+                    closest = biome;
+                }
+            }
+            return closest;
+        }
+
+        /**
+         * LibGDX Color -> AWT Color
+         */
+        private int getBiomeRGB(Biome b) {
+            if (b == null || b.biomeColor == null) {
+                return java.awt.Color.MAGENTA.getRGB();
+            }
+
+            return new java.awt.Color(
+                    Math.round(b.biomeColor.r * 255),
+                    Math.round(b.biomeColor.g * 255),
+                    Math.round(b.biomeColor.b * 255),
+                    Math.round(b.biomeColor.a * 255)
+            ).getRGB();
+        }
     }
 }

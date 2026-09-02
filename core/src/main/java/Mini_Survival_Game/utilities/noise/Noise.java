@@ -97,7 +97,7 @@ public class Noise {
     }
 
     private double sample(double[] values, int x, int y) {
-        return values[(x & (width - 1)) + (y & (height - 1)) * width];
+        return values[x + y * width];
     }
 
     public double getScale1Noise(int x, int y) { return sample(getNoise1(), x, y); }
@@ -131,14 +131,14 @@ public class Noise {
     }
 
     public double getTemperature(int x, int y) {
-        return octave(x, y, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0, 0, 0);
+        return octave(x, y, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0.01, 0.01, 0.01);
     }
 
     public double getHeight(int x, int y) {
-        return octave(x, y, 0.005, 0.01, 0.02, 0.01, 0.02, 0.05, 0.1, 0.2, 0.7, 0.2, 0, 0, 0);
+        return octave(x, y, 0.005, 0.01, 0.02, 0.01, 0.02, 0.05, 0.1, 0.2, 0.7, 0.2, 0.01, 0.01, 0.01);
     }
 
     public double getHumidity(int x, int y) {
-        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.4, 0.3, 0.1, 0.05, 0.02, 0.01, 0, 0, 0);
+        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.4, 0.3, 0.1, 0.05, 0.02, 0.01, 0.01, 0.01, 0.01);
     }
 }
