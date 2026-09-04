@@ -23,6 +23,7 @@ public class Biomes {
     public static final Biome forest = new Forest();
     public static final Biome ocean = new Ocean();
     public static final Biome winter = new Winter();
+    public static final Biome river = new River();
 
     ////////////////////////////////////////////////////
     // Assigned map colors for biomes
@@ -285,12 +286,19 @@ public class Biomes {
             Biome closest = null;
             //float maxWeight = -Float.MAX_VALUE;
             float maxWeight = Float.NEGATIVE_INFINITY;
+            boolean oceanMatched = false;
+
             for (Biome biome : biomeList) {
+
                 float weight = biome.getGenerationWeight(noise, x, y);
                 if (weight > maxWeight) {
                     maxWeight = weight;
                     closest = biome;
+                    if (biome == ocean) oceanMatched = true;
                 }
+
+                // Always generate ocean biome over river biome
+                if (biome == river && oceanMatched) closest = ocean;
             }
             return closest;
         }
