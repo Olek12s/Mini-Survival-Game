@@ -11,6 +11,17 @@ public class Ocean extends Biome {
     }
 
     @Override
+    public float getGenerationWeight(Noise noise, int tx, int ty) {
+        float y = (float)noise.getHeight(tx, ty) - height;
+        float w = (float)noise.getContinentalness(tx, ty) - continentalness;
+
+        float continentSmoothness = 2.4f;   // increasing this value should result in more smoother and larger continents and more islands around them
+        w = w * continentSmoothness;
+
+        return rarity / (y * y + w * w);
+    }
+
+    @Override
     public Color generate(Noise noise, int x, int y) {
         return null;
     }

@@ -24,11 +24,11 @@ public class Biomes {
     ////////////////////////////////////////////////////
     public static final List<Biome> biomeList = new ArrayList<>();
 
-    //public static final Biome beach = new Beach();
-   // public static final Biome desert = new Desert();
+//    public static final Biome beach = new Beach();
+//    public static final Biome desert = new Desert();
+//    public static final Biome winter = new Winter();
     public static final Biome forest = new Forest();
     public static final Biome ocean = new Ocean();
-    //public static final Biome winter = new Winter();
     public static final Biome river = new River();
 
     ////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ public class Biomes {
                     zoom /= 1.2;
                 }
 
-                zoom = Math.clamp(zoom, 0.3, 10.0);
+                zoom = Math.clamp(zoom, 0.1, 10.0);
 
                 double mouseWorldX = (e.getX() - dragOffsetX) / oldZoom + doubleOffsetX;
                 double mouseWorldY = (e.getY() - dragOffsetY) / oldZoom + doubleOffsetY;
@@ -255,8 +255,8 @@ public class Biomes {
                 int reqW = (int) Math.ceil(mapWidth / currentZoom) + 2;
                 int reqH = (int) Math.ceil(mapHeight / currentZoom) + 2;
 
-                final int finalReqWidth = Math.min(reqW, 3500);
-                final int finalReqHeight = Math.min(reqH, 3500);
+                final int finalReqWidth = Math.min(reqW, 5000);
+                final int finalReqHeight = Math.min(reqH, 5000);
 
                 Noise noise = new Noise(currentSeed, currentOffsetX, currentOffsetY, finalReqWidth, finalReqHeight);
                 BufferedImage newMapImage = new BufferedImage(finalReqWidth, finalReqHeight, BufferedImage.TYPE_INT_RGB);

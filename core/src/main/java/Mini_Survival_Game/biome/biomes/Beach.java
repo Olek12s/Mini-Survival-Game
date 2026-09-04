@@ -11,13 +11,7 @@ public class Beach extends Biome {
         biomeColor = new Color(209 / 255f, 209 / 255f, 109 / 255f, 1f);
     }
 
-    @Override
-    public float getGenerationWeight(Noise noise, int tx, int ty) {
-        float x = (float)noise.getTemperature(tx, ty) - temperature;
-        float y = (float)noise.getHeight(tx, ty) - height;
-        float z = (float)noise.getHumidity(tx, ty) - humidity;
-        return rarity / (x * x + y + z * z);
-    }
+
 
     @Override
     public Color generate(Noise noise, int x, int y) {
