@@ -155,7 +155,7 @@ public class Noise {
     }
 
     public double getContinentalness(int x, int y) {
-        double base = octave(x, y, 0.0, 0.0, 0.02, 0.04, 0.15, 0.05, 0.15, 0.3, 0.4, 1.2, 0.8, 0.3, 0.1);
+        double base = octave(x, y, 0.0, 0.0, 0.01, 0.02, 0.04, 0.05, 0.15, 0.4, 0.3, 0.8, 0.8, 0.5, 0.18);
         // 0.0 - 50/50 land and continents
         // negative values - more ocean
         // positive values - more land

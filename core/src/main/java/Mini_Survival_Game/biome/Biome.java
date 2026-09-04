@@ -50,7 +50,7 @@ public abstract class Biome {
         float z = (float)noise.getHumidity(tx, ty) - humidity;
         float w = (float)noise.getContinentalness(tx, ty) - continentalness;
 
-        float continentSmoothness = 1.8f;
+        float continentSmoothness = 1.4f;
 
         w = w * continentSmoothness;
 
