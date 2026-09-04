@@ -7,9 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static Mini_Survival_Game.level.chunk.ChunkManager.CHUNK_SIZE;
 
 public class Biomes {
 
@@ -18,11 +24,11 @@ public class Biomes {
     ////////////////////////////////////////////////////
     public static final List<Biome> biomeList = new ArrayList<>();
 
-    public static final Biome beach = new Beach();
-    public static final Biome desert = new Desert();
+    //public static final Biome beach = new Beach();
+   // public static final Biome desert = new Desert();
     public static final Biome forest = new Forest();
     public static final Biome ocean = new Ocean();
-    public static final Biome winter = new Winter();
+    //public static final Biome winter = new Winter();
     public static final Biome river = new River();
 
     ////////////////////////////////////////////////////
@@ -70,6 +76,9 @@ public class Biomes {
 
         private boolean isGenerating = false;
         private boolean generationPending = false;
+
+        private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        private final int THREAD_CHUNK_SIZE = 64;
 
         public BiomeViewer() {
             setTitle("Biome creator");
@@ -243,20 +252,42 @@ public class Biomes {
             final double currentZoom = zoom;
 
             new Thread(() -> {
-                int reqWidth = (int) Math.ceil(mapWidth / currentZoom) + 2;
-                int reqHeight = (int) Math.ceil(mapHeight / currentZoom) + 2;
+                int reqW = (int) Math.ceil(mapWidth / currentZoom) + 2;
+                int reqH = (int) Math.ceil(mapHeight / currentZoom) + 2;
 
-                if (reqWidth > 3500) reqWidth = 3500;
-                if (reqHeight > 3500) reqHeight = 3500;
+                final int finalReqWidth = Math.min(reqW, 3500);
+                final int finalReqHeight = Math.min(reqH, 3500);
 
-                Noise noise = new Noise(currentSeed, currentOffsetX, currentOffsetY, reqWidth, reqHeight);
-                BufferedImage newMapImage = new BufferedImage(reqWidth, reqHeight, BufferedImage.TYPE_INT_RGB);
+                Noise noise = new Noise(currentSeed, currentOffsetX, currentOffsetY, finalReqWidth, finalReqHeight);
+                BufferedImage newMapImage = new BufferedImage(finalReqWidth, finalReqHeight, BufferedImage.TYPE_INT_RGB);
 
-                for (int x = 0; x < reqWidth; x++) {
-                    for (int y = 0; y < reqHeight; y++) {
-                        Biome b = matchBiome(noise, x, y);
-                        newMapImage.setRGB(x, y, getBiomeRGB(b));
+                int[] pixels = ((DataBufferInt) newMapImage.getRaster().getDataBuffer()).getData();
+
+                List<Callable<Void>> tasks = new ArrayList<>();
+
+                for (int startX = 0; startX < finalReqWidth; startX += THREAD_CHUNK_SIZE) {
+                    for (int startY = 0; startY < finalReqHeight; startY += THREAD_CHUNK_SIZE) {
+                        final int cx = startX;
+                        final int cy = startY;
+                        final int endX = Math.min(cx + THREAD_CHUNK_SIZE, finalReqWidth);
+                        final int endY = Math.min(cy + THREAD_CHUNK_SIZE, finalReqHeight);
+
+                        tasks.add(() -> {
+                            for (int x = cx; x < endX; x++) {
+                                for (int y = cy; y < endY; y++) {
+                                    Biome b = matchBiome(noise, x, y);
+                                    pixels[x + y * finalReqWidth] = getBiomeRGB(b);
+                                }
+                            }
+                            return null;
+                        });
                     }
+                }
+
+                try {
+                    executor.invokeAll(tasks);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
 
                 SwingUtilities.invokeLater(() -> {

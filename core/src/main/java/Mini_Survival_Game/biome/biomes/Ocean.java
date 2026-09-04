@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Ocean extends Biome {
     public Ocean() {
-        super(0, -0.6f, 0.2f, 1.f);
-        biomeColor = new Color(0 / 255f, 119 / 255f, 190 / 255f, 1f);
+        super(0, -0.2f, 0.85f, 1f, -0.7f);
+        biomeColor = new Color(55 / 255f, 119 / 255f, 190 / 255f, 1f);
     }
 
     @Override

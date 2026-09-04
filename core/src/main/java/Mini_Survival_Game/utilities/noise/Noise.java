@@ -130,8 +130,20 @@ public class Noise {
                 + getScale4096Noise(x, y) * s4096;
     }
 
+    public double getRiverNoise(int x, int y) {
+        double macroNoise = getScale256Noise(x, y); // determines river's direction
+        double macroWeight = 0.5;   // changes the randomness of the river's direction (lower = more chaotic)
+
+        double microNoise = getScale64Noise(x, y);  // determines river's details such as curvers
+        double microWeight = 0.4;  // changes width of the river
+
+        double riverBase = (macroNoise * macroWeight) + (microNoise * microWeight);
+
+        return Math.abs(riverBase); // River's noise value shouldn't be lower than 0
+    }
+
     public double getTemperature(int x, int y) {
-        return octave(x, y, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0.01, 0.01, 0.01);
+        return octave(x, y, 0.05, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0.01, 0.01, 0.01);
     }
 
     public double getHeight(int x, int y) {
@@ -140,5 +152,13 @@ public class Noise {
 
     public double getHumidity(int x, int y) {
         return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.4, 0.3, 0.1, 0.05, 0.02, 0.01, 0.01, 0.01, 0.01);
+    }
+
+    public double getContinentalness(int x, int y) {
+        double base = octave(x, y, 0.0, 0.0, 0.02, 0.04, 0.15, 0.05, 0.15, 0.3, 0.4, 1.2, 0.8, 0.3, 0.1);
+        // 0.0 - 50/50 land and continents
+        // negative values - more ocean
+        // positive values - more land
+        return base - 0.85;
     }
 }
