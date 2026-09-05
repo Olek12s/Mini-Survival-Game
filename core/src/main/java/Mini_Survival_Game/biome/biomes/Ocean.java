@@ -15,7 +15,8 @@ public class Ocean extends Biome {
         float y = (float)noise.getHeight(tx, ty) - height;
         float w = (float)noise.getContinentalness(tx, ty) - continentalness;
 
-        float continentSmoothness = 2.4f;   // increasing this value should result in more smoother and larger continents and more islands around them
+        float continentSmoothness = 2.4f;
+
         w = w * continentSmoothness;
 
         return rarity / (y * y + w * w);
