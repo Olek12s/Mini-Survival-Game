@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Desert extends Biome {
     public Desert() {
-        super(0.3f, 0.0f, -0.6f, 1.f);
+        super(0.5f, 0.0f, -0.6f, 1.f);
         biomeColor = new Color(240 / 255f, 140 / 255f, 91 / 255f, 1f);
     }
 

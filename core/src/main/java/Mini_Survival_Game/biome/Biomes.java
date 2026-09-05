@@ -25,9 +25,11 @@ public class Biomes {
     public static final List<Biome> biomeList = new ArrayList<>();
 
 //    public static final Biome beach = new Beach();
-//    public static final Biome desert = new Desert();
-//    public static final Biome winter = new Winter();
+
+    public static final Biome desert = new Desert();
+    public static final Biome winter = new Winter();
     public static final Biome forest = new Forest();
+
     public static final Biome ocean = new Ocean();
     public static final Biome river = new River();
 

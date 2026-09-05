@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Winter extends Biome {
     public Winter() {
-        super(-0.68f, 0.0f, -0.6f, 1.f);
+        super(-0.8f, 0.0f, -0.6f, 1.f);
         biomeColor = new Color(210 / 255f, 210 / 255f, 210 / 255f, 1f);
     }
 
