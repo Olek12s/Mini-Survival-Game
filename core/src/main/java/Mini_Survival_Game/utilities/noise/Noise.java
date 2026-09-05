@@ -142,16 +142,32 @@ public class Noise {
         return Math.abs(riverBase); // River's noise value shouldn't be lower than 0
     }
 
-    public double getTemperature(int x, int y) {
-        return octave(x, y, 0.05, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0.01, 0.01, 0.01);
-    }
-
     public double getHeight(int x, int y) {
         return octave(x, y, 0.005, 0.01, 0.02, 0.01, 0.02, 0.05, 0.1, 0.2, 0.7, 0.2, 0.01, 0.01, 0.01);
     }
 
+//    public double getTemperature(int x, int y) {
+//        // Lekkie powiększenie: najwyższe wagi (0.6, 0.4) lądują na 7. i 8. pozycji (skale 128 i 256).
+//        return octave(x, y, 0.02, 0.02, 0.04, 0.08, 0.15, 0.3, 0.6, 0.4, 0.15, 0.05, 0.02, 0.01, 0.01);
+//    }
+//
+//    public double getHumidity(int x, int y) {
+//        // Wilgotność również powiększona o "jedno oczko" w prawo.
+//        return octave(x, y, 0.02, 0.04, 0.06, 0.1, 0.2, 0.4, 0.5, 0.3, 0.1, 0.05, 0.02, 0.01, 0.01);
+//    }
+//    public double getTemperature(int x, int y) {
+//        return octave(x, y, 0.05, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0.01, 0.01, 0.01);
+//    }
+//
+//    public double getHumidity(int x, int y) {
+//        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.4, 0.3, 0.1, 0.05, 0.02, 0.01, 0.01, 0.01, 0.01);
+//    }
+    public double getTemperature(int x, int y) {
+        return octave(x, y, 0.05, 0.02, 0.04, 0.08, 0.1, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
+    }
+
     public double getHumidity(int x, int y) {
-        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.4, 0.3, 0.1, 0.05, 0.02, 0.01, 0.01, 0.01, 0.01);
+        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
     }
 
     public double getContinentalness(int x, int y) {

@@ -15,9 +15,9 @@ public class Ocean extends Biome {
         float y = (float)noise.getHeight(tx, ty) - height;
         float w = (float)noise.getContinentalness(tx, ty) - continentalness;
 
-        float continentSmoothness = 2.4f;
+        float continentSize = 2.4f; // smaller number - smaller continents & more islands
 
-        w = w * continentSmoothness;
+        w = w * continentSize;
 
         return rarity / (y * y + w * w);
     }
