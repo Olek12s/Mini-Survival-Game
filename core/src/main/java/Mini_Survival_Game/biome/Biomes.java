@@ -29,6 +29,7 @@ public class Biomes {
     public static final Biome desert = new Desert();
     public static final Biome winter = new Winter();
     public static final Biome forest = new Forest();
+    public static final Biome plains = new Plains();
 
     public static final Biome ocean = new Ocean();
     public static final Biome river = new River();
