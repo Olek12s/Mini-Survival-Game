@@ -20,7 +20,7 @@ public abstract class Biome {
         this.rarity = rarity;
 
         // Add created biome to the biomes list
-        if (!(this instanceof River)) Biomes.addBiome(this);
+        Biomes.addBiome(this);
     }
 
     public Biome(float temperature, float height, float humidity, float rarity, float continentalness) {
@@ -31,7 +31,7 @@ public abstract class Biome {
         this.continentalness = continentalness;
 
         // Add created biome to the biomes list
-        if (!(this instanceof River)) Biomes.addBiome(this);
+        Biomes.addBiome(this);
     }
 
     /**

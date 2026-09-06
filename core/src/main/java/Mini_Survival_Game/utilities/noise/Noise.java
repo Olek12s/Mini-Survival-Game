@@ -138,14 +138,31 @@ public class Noise {
     }
 
     public double getRiverNoise(int x, int y) {
-        double macroNoise = getScale256Noise(x, y); // determines river's direction
-        double macroWeight = 0.5;   // changes the randomness of the river's direction (lower = more chaotic)
+        double smallNoiseScale = getScale128Noise(x, y);
+        double mediumNoiseScale = getScale256Noise(x, y);
 
-        double microNoise = getScale64Noise(x, y);  // determines river's details such as curvers
-        double microWeight = 0.4;  // changes width of the river
+        double smallNoiseWeight = 1;
+        double mediumNoiseWeight = 1;
 
-        double riverBase = (macroNoise * macroWeight) + (microNoise * microWeight);
+        switch (noiseSize) {
+            case SMALL:
+                smallNoiseWeight = 0.5;
+                mediumNoiseWeight = 0.7;
+                break;
+            case MEDIUM:
+                smallNoiseWeight = 0.4;
+                mediumNoiseWeight = 0.6;
+                break;
+            case LARGE:
+                smallNoiseWeight = 0.3;
+                mediumNoiseWeight = 0.5;
+                break;
+            default:
+                smallNoiseWeight = 0.3;
+                mediumNoiseWeight = 0.5;
+        }
 
+        double riverBase = (smallNoiseScale * smallNoiseWeight) + (mediumNoiseScale * mediumNoiseWeight);
         return Math.abs(riverBase); // River's noise value shouldn't be lower than 0
     }
 
@@ -163,7 +180,7 @@ public class Noise {
             case LARGE:
                 return octave(x, y, 0.01, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01);
             default:
-                return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
+                return octave(x, y, 0.01, 0.01, 0.01, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
         }
       //  return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
     }
@@ -175,9 +192,9 @@ public class Noise {
             case MEDIUM:
                 return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
             case LARGE:
-                return octave(x, y, 0.01, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01);
+                return octave(x, y, 0.01, 0.01, 0.01, 0.015, 0.02, 0.1, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01);
             default:
-                return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
+                return octave(x, y, 0.01, 0.01, 0.01, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
 
         }
       //  return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);

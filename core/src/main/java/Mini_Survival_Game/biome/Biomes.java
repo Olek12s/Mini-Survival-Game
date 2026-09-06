@@ -327,22 +327,31 @@ public class Biomes {
          */
         public static Biome matchBiome(Noise noise, int x, int y) {
             Biome closest = null;
-            //float maxWeight = -Float.MAX_VALUE;
             float maxWeight = Float.NEGATIVE_INFINITY;
-            boolean oceanMatched = false;
+
+            Biome baseBiome = null;
+            float maxBaseWeight = Float.NEGATIVE_INFINITY;
+
 
             for (Biome biome : biomeList) {
-
                 float weight = biome.getGenerationWeight(noise, x, y);
+
                 if (weight > maxWeight) {
                     maxWeight = weight;
                     closest = biome;
-                    if (biome == ocean) oceanMatched = true;
                 }
 
-                // Always generate ocean biome over river biome
-                if (biome == river && oceanMatched) closest = ocean;
+                if (biome != river && weight > maxBaseWeight) {
+                    maxBaseWeight = weight;
+                    baseBiome = biome;
+                }
             }
+
+            // Always generate ocean biome over river biome
+            if (closest == river && baseBiome == ocean) {
+                return ocean;
+            }
+
             return closest;
         }
 
