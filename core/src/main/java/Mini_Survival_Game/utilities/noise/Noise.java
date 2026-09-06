@@ -2,6 +2,7 @@ package Mini_Survival_Game.utilities.noise;
 
 public class Noise {
     private long seed;
+    private NoiseSize noiseSize;
     int width, height;
 
 
@@ -37,11 +38,17 @@ public class Noise {
     private double[] getNoise2048() { if (noise2048 == null) { noise2048 = new double[width * height]; } return noise2048;}
     private double[] getNoise4096() { if (noise4096 == null) { noise4096 = new double[width * height]; } return noise4096;}
 
+    public enum NoiseSize {
+        SMALL,
+        MEDIUM,
+        LARGE,
+    }
 
-    public Noise(long seed, int offsetX, int offsetY, int width, int height) {
+    public Noise(long seed, NoiseSize noiseSize, int offsetX, int offsetY, int width, int height) {
         this.seed = seed;
         this.width = width;
         this.height = height;
+        this.noiseSize = noiseSize;
 
         noise1 = new double[width * height];
         noise2 = new double[width * height];
@@ -76,8 +83,8 @@ public class Noise {
             for (int y = 0; y < height; y++) {
                 int index = x + y * width;
 
-                double rx = x + offsetX;
-                double ry = y + offsetY;
+                double rx = (x + offsetX);
+                double ry = (y + offsetY);
 
                 noise1[index] = Simplex.noise2(s1, rx / 1.0, ry / 1.0);
                 noise2[index] = Simplex.noise2(s2, rx / 2.0, ry / 2.0);
@@ -146,28 +153,34 @@ public class Noise {
         return octave(x, y, 0.005, 0.01, 0.02, 0.01, 0.02, 0.05, 0.1, 0.2, 0.7, 0.2, 0.01, 0.01, 0.01);
     }
 
-//    public double getTemperature(int x, int y) {
-//        // Lekkie powiększenie: najwyższe wagi (0.6, 0.4) lądują na 7. i 8. pozycji (skale 128 i 256).
-//        return octave(x, y, 0.02, 0.02, 0.04, 0.08, 0.15, 0.3, 0.6, 0.4, 0.15, 0.05, 0.02, 0.01, 0.01);
-//    }
-//
-//    public double getHumidity(int x, int y) {
-//        // Wilgotność również powiększona o "jedno oczko" w prawo.
-//        return octave(x, y, 0.02, 0.04, 0.06, 0.1, 0.2, 0.4, 0.5, 0.3, 0.1, 0.05, 0.02, 0.01, 0.01);
-//    }
-//    public double getTemperature(int x, int y) {
-//        return octave(x, y, 0.05, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 0.05, 0.04, 0.01, 0.01, 0.01, 0.01);
-//    }
-//
-//    public double getHumidity(int x, int y) {
-//        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.4, 0.3, 0.1, 0.05, 0.02, 0.01, 0.01, 0.01, 0.01);
-//    }
     public double getTemperature(int x, int y) {
-        return octave(x, y, 0.05, 0.02, 0.04, 0.08, 0.1, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
+
+        switch (noiseSize) {
+            case SMALL:
+                return octave(x, y,  0.01, 0.015, 0.02, 0.05, 0.16, 0.35, 0.67, 0.04, 0.01, 0.01, 0.01, 0.01, 0.01);
+            case MEDIUM:
+                return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
+            case LARGE:
+                return octave(x, y, 0.01, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01);
+            default:
+                return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
+        }
+      //  return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
     }
 
     public double getHumidity(int x, int y) {
-        return octave(x, y, 0.02, 0.04, 0.07, 0.1, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
+        switch (noiseSize) {
+            case SMALL:
+                return octave(x, y, 0.01, 0.015, 0.02, 0.2, 0.4, 0.35, 0.15, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01);
+            case MEDIUM:
+                return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
+            case LARGE:
+                return octave(x, y, 0.01, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01);
+            default:
+                return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
+
+        }
+      //  return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
     }
 
     public double getContinentalness(int x, int y) {

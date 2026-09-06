@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static Mini_Survival_Game.level.chunk.ChunkManager.CHUNK_SIZE;
+import static Mini_Survival_Game.utilities.noise.Noise.NoiseSize.*;
 
 public class Biomes {
 
@@ -75,6 +75,8 @@ public class Biomes {
         private final JLabel coordsLabel;
         private final JTextField seedField;
         private final JCheckBox chunkGridCheck;
+
+        private final JComboBox<Noise.NoiseSize> sizeComboBox;
 
         private boolean isGenerating = false;
         private boolean generationPending = false;
@@ -155,6 +157,12 @@ public class Biomes {
             chunkGridCheck = new JCheckBox("Show chunks grid");
             chunkGridCheck.addActionListener(e -> mapPanel.repaint());
             controlPanel.add(chunkGridCheck);
+
+            controlPanel.add(new JLabel("Size:"));
+            sizeComboBox = new JComboBox<>(Noise.NoiseSize.values());
+            sizeComboBox.setSelectedItem(Noise.NoiseSize.MEDIUM);
+            sizeComboBox.addActionListener(e -> generateMapAsync());
+            controlPanel.add(sizeComboBox);
 
             coordsLabel = new JLabel("X: 0 Y: 0 | Zoom: 1.0x");
             controlPanel.add(coordsLabel);
@@ -253,6 +261,8 @@ public class Biomes {
             final int currentOffsetY = (int) Math.floor(doubleOffsetY);
             final double currentZoom = zoom;
 
+            final Noise.NoiseSize currentSize = (Noise.NoiseSize) sizeComboBox.getSelectedItem();
+
             new Thread(() -> {
                 int reqW = (int) Math.ceil(mapWidth / currentZoom) + 2;
                 int reqH = (int) Math.ceil(mapHeight / currentZoom) + 2;
@@ -260,7 +270,7 @@ public class Biomes {
                 final int finalReqWidth = Math.min(reqW, 5000);
                 final int finalReqHeight = Math.min(reqH, 5000);
 
-                Noise noise = new Noise(currentSeed, currentOffsetX, currentOffsetY, finalReqWidth, finalReqHeight);
+                Noise noise = new Noise(currentSeed, currentSize, currentOffsetX, currentOffsetY, finalReqWidth, finalReqHeight);
                 BufferedImage newMapImage = new BufferedImage(finalReqWidth, finalReqHeight, BufferedImage.TYPE_INT_RGB);
 
                 int[] pixels = ((DataBufferInt) newMapImage.getRaster().getDataBuffer()).getData();
