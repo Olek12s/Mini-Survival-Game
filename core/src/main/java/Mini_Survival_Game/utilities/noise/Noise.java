@@ -174,7 +174,7 @@ public class Noise {
 
         switch (noiseSize) {
             case SMALL:
-                return octave(x, y,  0.01, 0.015, 0.02, 0.05, 0.16, 0.35, 0.67, 0.04, 0.01, 0.01, 0.01, 0.01, 0.01);
+                return octave(x, y,  0.01, 0.015, 0.02, 0.05, 0.08, 0.15, 0.67, 0.04, 0.01, 0.01, 0.01, 0.01, 0.01);
             case MEDIUM:
                 return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.05, 0.16, 0.32, 0.64, 0.04, 0.01, 0.01, 0.01, 0.01);
             case LARGE:
@@ -188,7 +188,7 @@ public class Noise {
     public double getHumidity(int x, int y) {
         switch (noiseSize) {
             case SMALL:
-                return octave(x, y, 0.01, 0.015, 0.02, 0.2, 0.4, 0.35, 0.15, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01);
+                return octave(x, y, 0.01, 0.015, 0.02, 0.06, 0.16, 0.3, 0.15, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01);
             case MEDIUM:
                 return octave(x, y, 0.01, 0.01, 0.015, 0.02, 0.2, 0.4, 0.3, 0.1, 0.02, 0.01, 0.01, 0.01, 0.01);
             case LARGE:
