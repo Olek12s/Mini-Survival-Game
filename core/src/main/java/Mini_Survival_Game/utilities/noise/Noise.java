@@ -5,6 +5,7 @@ public class Noise {
     private NoiseSize noiseSize;
     int width, height;
 
+    public NoiseSize getNoiseSize() {return noiseSize;}
 
     // Small noise value - high frequency in noise, rough function, more detailed
     // Large noise value - small frequency in noise, smooth function, less detailed

@@ -10,6 +10,7 @@ public abstract class Biome {
     protected float humidity;
     protected float rarity;
     protected float continentalness;
+    protected float continentSize = 2.4f; // larger number - smaller continents
 
     protected Color biomeColor = Color.WHITE;  // Default biome color. Shall be changed inside biome's constructor
 
@@ -49,8 +50,6 @@ public abstract class Biome {
         float y = (float)noise.getHeight(tx, ty) - height;
         float z = (float)noise.getHumidity(tx, ty) - humidity;
         float w = (float)noise.getContinentalness(tx, ty) - continentalness;
-
-        float continentSize = 1.4f; // larger number - smaller continents
 
         w = w * continentSize;
 
