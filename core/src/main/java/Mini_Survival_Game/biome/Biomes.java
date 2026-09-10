@@ -69,8 +69,8 @@ public class Biomes {
         private int lastMouseX, lastMouseY;
 
         private BufferedImage mapImage;
-        private final int mapWidth = 800;
-        private final int mapHeight = 600;
+        private final int mapWidth = 1200;
+        private final int mapHeight = 800;
 
         private final JPanel mapPanel;
         private final JLabel coordsLabel;
